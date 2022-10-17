@@ -1,4 +1,4 @@
-package com.ll.comibird.Week_Mission.app.member.entity;
+package com.ll.comibird.Week_Mission.app.base.entity.entity;
 
 import com.ll.comibird.Week_Mission.app.base.entity.BaseEntity;
 import lombok.*;
