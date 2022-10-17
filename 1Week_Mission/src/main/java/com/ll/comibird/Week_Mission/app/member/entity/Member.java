@@ -15,11 +15,16 @@ import javax.persistence.Entity;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Member extends BaseEntity {
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    // 저자명
     @Column(unique = true)
     private String nickname;
-    @Column(unique = true)
+
+    @Column(nullable = false, unique = true)
     private String email;
 }
