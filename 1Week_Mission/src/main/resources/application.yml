@@ -1,19 +1,22 @@
 spring:
   profiles:
-    active: dev, base-addi
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
+    active: dev
+    include:
+      - base-addi
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/ebook?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
-    hibernate:
-      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    root: info
+    com.ll.comibird.Week_Mission.app: debug
+    org.hibernate.type.descriptor.sql: trace
+custom:
+  site:
+    name: ??
+    baseUrl: "http://localhost:8080"
