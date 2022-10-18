@@ -1,4 +1,4 @@
-package com.ll.comibird.Week_Mission.app.product.entity;
+package com.ll.comibird.Week_Mission.app.post.entity;
 
 
 import com.ll.comibird.Week_Mission.app.base.entity.BaseEntity;
@@ -15,14 +15,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
-public class Product extends BaseEntity {
+public class Post extends BaseEntity {
     @Column(nullable = false)
     private String subject;
 
-    @Column(nullable = false)
-    private Long price;
+    private String content;
+    private String contentHtml;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorId")
-    private Member member;
+    private Member author;
 }

@@ -1,6 +1,7 @@
 package com.ll.comibird.Week_Mission.app.member.entity;
 
 import com.ll.comibird.Week_Mission.app.base.entity.BaseEntity;
+import com.ll.comibird.Week_Mission.app.post.entity.Post;
 import com.ll.comibird.Week_Mission.app.product.entity.Product;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,9 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Setter
@@ -37,6 +36,10 @@ public class Member extends BaseEntity {
 
     // 권한 1 = 일반, 3 = 저자, 7 = 관리자
     private Integer authLevel;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
