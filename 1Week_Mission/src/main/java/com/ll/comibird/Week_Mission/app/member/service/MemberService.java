@@ -30,6 +30,7 @@ public class MemberService {
                 .email(email)
                 .createDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
+                .authLevel(1)
                 .build();
 
         memberRepository.save(member);
@@ -49,6 +50,7 @@ public class MemberService {
                 .nickname(nickname)
                 .createDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
+                .authLevel(3)
                 .build();
 
         memberRepository.save(member);

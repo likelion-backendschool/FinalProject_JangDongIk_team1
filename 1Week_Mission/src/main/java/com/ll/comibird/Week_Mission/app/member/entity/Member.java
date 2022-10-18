@@ -27,4 +27,7 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    // 권한 1 = 일반, 3 = 저자, 7 = 관리자
+    private Integer authLevel;
 }
