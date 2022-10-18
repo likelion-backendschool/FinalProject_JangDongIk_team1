@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -74,17 +74,16 @@
                 </span>
             </a>
             <form name="logoutForm" th:action="@{/member/logout}" method="post" hidden></form>
-            <a href="/member/profile" class="inline-flex" sec:authorize="isAuthenticated()">
+            <a href="/member/modify" class="inline-flex" sec:authorize="isAuthenticated()">
                 <i class="fa-solid fa-user"></i>
                 <span class="ml-[2px] hidden sm:block">
-                    프로파일
+                    회원정보 수정
                 </span>
             </a>
-
-            <a href="/song/create" class="inline-flex" sec:authorize="isAuthenticated()">
-                <i class="fa-solid fa-upload"></i>
+            <a href="/member/modifyPassword" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-user"></i>
                 <span class="ml-[2px] hidden sm:block">
-                    음원 업로드
+                    비밀번호 변경
                 </span>
             </a>
         </div>
