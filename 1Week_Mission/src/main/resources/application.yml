@@ -1,8 +1,6 @@
 spring:
   profiles:
-    active: dev
-    include:
-      - base-addi
+    active: dev, base-addi
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
@@ -19,4 +17,4 @@ logging:
 custom:
   site:
     name: Ebook
-    baseUrl: "http://localhost:8080"
+    baseUrl: "http://localhost:8010"

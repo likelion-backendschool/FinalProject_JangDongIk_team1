@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class AppConfig {
@@ -66,5 +68,10 @@ public class AppConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper().registerModule(new JavaTimeModule());
+    }
+
+    @Bean
+    public JavaMailSender javaMailSender() {
+        return new JavaMailSenderImpl();
     }
 }

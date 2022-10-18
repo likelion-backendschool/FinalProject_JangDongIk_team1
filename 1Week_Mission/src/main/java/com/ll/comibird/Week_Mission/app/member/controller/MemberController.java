@@ -1,6 +1,7 @@
 package com.ll.comibird.Week_Mission.app.member.controller;
 
 import com.ll.comibird.Week_Mission.app.member.form.JoinForm;
+import com.ll.comibird.Week_Mission.app.member.service.MailService;
 import com.ll.comibird.Week_Mission.app.member.service.MemberService;
 import com.ll.comibird.Week_Mission.util.Util;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final MailService mailService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
@@ -32,6 +34,13 @@ public class MemberController {
         else
             memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname());
 
+        /* 수정 필요
+        MailDto mailDto = new MailDto();
+        mailDto.setAddress(joinForm.getEmail());
+        mailDto.setTitle("환영합니다 Ebook입니다");
+        mailDto.setMessage(joinForm.getUsername() + "님 환영합니다");
+        mailService.mailSend(mailDto);
+        */
         return "redirect:/?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }
 }

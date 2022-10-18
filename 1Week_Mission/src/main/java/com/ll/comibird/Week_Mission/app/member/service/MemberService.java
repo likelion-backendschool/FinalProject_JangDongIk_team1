@@ -1,5 +1,6 @@
 package com.ll.comibird.Week_Mission.app.member.service;
 
+import com.ll.comibird.Week_Mission.app.member.dto.MailDto;
 import com.ll.comibird.Week_Mission.app.member.entity.Member;
 import com.ll.comibird.Week_Mission.app.member.exception.AlreadyJoinException;
 import com.ll.comibird.Week_Mission.app.member.repository.MemberRepository;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     public Member join(String username, String password, String email) {
         if (memberRepository.findByUsername(username).isPresent()) {
