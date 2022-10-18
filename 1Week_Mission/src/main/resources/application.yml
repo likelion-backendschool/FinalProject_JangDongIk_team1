@@ -18,5 +18,5 @@ logging:
     org.hibernate.type.descriptor.sql: trace
 custom:
   site:
-    name: ??
+    name: Ebook
     baseUrl: "http://localhost:8080"
