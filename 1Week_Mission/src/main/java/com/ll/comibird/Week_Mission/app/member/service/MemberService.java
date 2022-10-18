@@ -56,6 +56,10 @@ public class MemberService {
         return member;
     }
 
+    public Member findByUsername(String username) {
+        return (Member) memberRepository.findByUsername(username).orElseThrow(() -> new DataNotFoundException("siteuser not found"));
+    }
+
     public Member modify(Member member, String email, String nickname) {
         if (nickname == "") {
             member.setEmail(email);
@@ -69,7 +73,9 @@ public class MemberService {
         return member;
     }
 
-    public Member findByUsername(String username) {
-        return (Member) memberRepository.findByUsername(username).orElseThrow(() -> new DataNotFoundException("siteuser not found"));
+    public Member modifyPassword(Member member, String password) {
+         member.setPassword(passwordEncoder.encode(password));
+         memberRepository.save(member);
+         return member;
     }
 }

@@ -8,11 +8,10 @@ import com.ll.comibird.Week_Mission.app.member.form.ModifyPasswordForm;
 import com.ll.comibird.Week_Mission.app.member.repository.MemberRepository;
 import com.ll.comibird.Week_Mission.app.member.service.MailService;
 import com.ll.comibird.Week_Mission.app.member.service.MemberService;
-import com.ll.comibird.Week_Mission.app.security.dto.MemberContext;
 import com.ll.comibird.Week_Mission.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,13 +99,24 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modifyPassword")
-    public String modifyPassword() {
+    public String modifyPassword(@Valid ModifyPasswordForm modifyPasswordForm) {
         return "member/modifyPassword";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modifyPassword")
-    public String modifyPassword(@AuthenticationPrincipal MemberContext memberContext, @Valid ModifyPasswordForm modifyPasswordForm) {
+    public String modifyPassword(Principal principal, @Valid ModifyPasswordForm modifyPasswordForm, BindingResult bindingResult) {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(!encoder.matches(modifyPasswordForm.getOldPassword(), (memberService.findByUsername(principal.getName()).getPassword()))) {
+            return "redirect:/member/modifyPassword?msg=" + Util.url.encode("기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        if (!modifyPasswordForm.getPassword().equals(modifyPasswordForm.getPasswordConfirm())) {
+            return "redirect:/member/modifyPassword?msg=" + Util.url.encode("새 비밀번호가 일치하지 않습니다.");
+        }
+
+        memberService.modifyPassword(memberService.findByUsername(principal.getName()), modifyPasswordForm.getPassword());
         return "redirect:/member/modifyPassword?msg=" + Util.url.encode("비밀번호 변경이 완료되었습니다.");
     }
 }
