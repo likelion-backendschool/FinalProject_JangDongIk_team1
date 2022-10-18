@@ -32,7 +32,7 @@
                     form.password.value = form.password.value.trim();
 
                     if (form.password.value.length == 0) {
-                        warningModal("로그인비밀번호를 입력해주세요.");
+                        errorModal("로그인비밀번호를 입력해주세요.");
                         form.password.focus();
 
                         return;
@@ -58,6 +58,10 @@
                     </label>
                     <input type="password" name="password"
                            placeholder="비밀번호" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div>
+                    <a href="/member/findUsername" class="text">아이디 찾기</a>
                 </div>
 
                 <div class="grid grid-cols-2 mt-2 gap-2">

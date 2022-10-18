@@ -1,6 +1,9 @@
 package com.ll.comibird.Week_Mission.app.member.controller;
 
+import com.ll.comibird.Week_Mission.app.member.entity.Member;
+import com.ll.comibird.Week_Mission.app.member.form.FindUsernameForm;
 import com.ll.comibird.Week_Mission.app.member.form.JoinForm;
+import com.ll.comibird.Week_Mission.app.member.repository.MemberRepository;
 import com.ll.comibird.Week_Mission.app.member.service.MailService;
 import com.ll.comibird.Week_Mission.app.member.service.MemberService;
 import com.ll.comibird.Week_Mission.util.Util;
@@ -19,6 +22,7 @@ import javax.validation.Valid;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final MailService mailService;
 
     @PreAuthorize("isAnonymous()")
@@ -53,5 +57,21 @@ public class MemberController {
         mailService.mailSend(mailDto);
         */
         return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/findUsername")
+    public String findUsername() {
+        return "member/findUsername";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/findUsername")
+    public String findUsername(@Valid FindUsernameForm findUsernameForm) {
+        if (memberRepository.findByEmail(findUsernameForm.getEmail()) == null) {
+            return "redirect:/member/findUsername?msg=" + Util.url.encode("아이디를 찾을 수 없습니다.");
+        }
+        Member member = memberRepository.findByEmail(findUsernameForm.getEmail());
+        return "redirect:/member/login?msg=" + Util.url.encode("아이디는 " + member.getUsername() + "입니다.");
     }
 }
