@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -28,8 +27,11 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
-        memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail());
+        if (joinForm.getNickname() == null)
+            memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail());
+        else
+            memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname());
 
-        return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
+        return "redirect:/?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }
 }
