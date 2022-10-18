@@ -32,7 +32,7 @@
                     form.password.value = form.password.value.trim();
 
                     if (form.password.value.length == 0) {
-                        errorModal("로그인비밀번호를 입력해주세요.");
+                        warningModal("로그인비밀번호를 입력해주세요.");
                         form.password.focus();
 
                         return;
