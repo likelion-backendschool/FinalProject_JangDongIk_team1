@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -19,6 +20,16 @@ import javax.validation.Valid;
 public class MemberController {
     private final MemberService memberService;
     private final MailService mailService;
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    public String showLogin(HttpServletRequest request) {
+        String uri = request.getHeader("Referer");
+        if (uri != null && !uri.contains("/member/login")) {
+            request.getSession().setAttribute("prevPage", uri);
+        }
+        return "member/login";
+    }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
@@ -41,6 +52,6 @@ public class MemberController {
         mailDto.setMessage(joinForm.getUsername() + "님 환영합니다");
         mailService.mailSend(mailDto);
         */
-        return "redirect:/?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
+        return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }
 }
