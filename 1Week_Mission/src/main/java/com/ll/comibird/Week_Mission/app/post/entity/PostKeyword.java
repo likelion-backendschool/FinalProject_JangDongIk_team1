@@ -17,4 +17,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class PostKeyword extends BaseEntity {
     private String content;
+
+    @OneToMany(mappedBy = "postKeyword")
+    private List<PostHashTag> postHashTags = new ArrayList<>();
 }

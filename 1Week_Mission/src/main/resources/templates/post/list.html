@@ -19,6 +19,7 @@
                         <th>번호</th>
                         <th style="width:50%">제목</th>
                         <th>작성자</th>
+                        <th>해시태그</th>
                         <th>작성날짜</th>
                         <th>수정날짜</th>
                     </tr>
@@ -26,9 +27,14 @@
                     <tbody>
                     <th:block th:each="post : ${posts}">
                         <tr class="hover">
-                            <th th:text="${post.id}"></th>
-                            <td th:text="${post.subject}"></td>
+                            <td th:text="${post.id}"></td>
+                            <td>
+                                <a th:text="${post.subject}" th:href="@{|/post/${post.id}|}"></a>
+                            </td>
                             <td th:text="${post.author.username}"></td>
+                            <td>
+
+                            </td>
                             <td th:text="${#temporals.format(post.createDate, 'yy-MM-dd hh:mm')}"></td>
                             <td th:text="${#temporals.format(post.updateDate, 'yy-MM-dd hh:mm')}"></td>
                         </tr>

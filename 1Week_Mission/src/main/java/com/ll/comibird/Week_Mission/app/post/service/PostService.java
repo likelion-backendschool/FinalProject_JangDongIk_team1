@@ -6,8 +6,10 @@ import com.ll.comibird.Week_Mission.app.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +31,18 @@ public class PostService {
         postRepository.save(post);
         postHashTagService.applyHashTags(post, hashTagContents);
         return post;
+    }
+
+    public Optional<Post> findByPostId(Long id) {
+        Optional<Post> post = postRepository.findById(id);
+        return post;
+    }
+
+    public boolean canAccess(Member member, Post post) {
+        return member.getId().equals(post.getAuthor().getId());
+    }
+
+    public void delete(Post post) {
+        postRepository.delete(post);
     }
 }
