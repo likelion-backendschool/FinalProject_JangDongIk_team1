@@ -7,6 +7,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -25,4 +27,7 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorId")
     private Member author;
+
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
+    private List<PostHashTag> postHashTags = new ArrayList<>();
 }
