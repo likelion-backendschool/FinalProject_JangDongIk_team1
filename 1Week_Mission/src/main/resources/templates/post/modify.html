@@ -33,19 +33,19 @@
 
         </script>
 
-
         <form th:action method="POST" enctype="multipart/form-data" onsubmit="WriteForm__submit(this); return false;">
             <div>
                 <span>제목</span>
-                <input type="text" name="subject">
+                <input type="text" name="subject" th:value="${post.subject}">
             </div>
             <div>
                 <span>내용</span>
-                <textarea name="content"></textarea>
+                <textarea name="content" th:value="${post.content}"></textarea>
             </div>
             <div>
                 <span>해시태그</span>
-                <input type="text" name="postHashTagContents" placeholder="#태그1 #태그2" />
+                <!--수정필요-->
+                <input type="text" name="postHashTagContents" placeholder="#태그1 #태그2"/>
             </div>
             <div>
                 <span>글쓰기</span>

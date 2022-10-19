@@ -31,7 +31,6 @@ public class PostController {
     @GetMapping("/list")
     public String showPostList(Model model) {
         List<Post> posts = postService.findAllByOrderByIdDesc();
-
         model.addAttribute("posts", posts);
 
         return "post/list";
@@ -46,8 +45,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String postWrite(@AuthenticationPrincipal MemberContext memberContext, @Valid PostForm postForm) {
-
-        Post post = postService.write(memberContext.getMember(), postForm.getSubject(), postForm.getContent(), postForm.getHashTagContents());
+        Post post = postService.write(memberContext.getMember(), postForm.getSubject(), postForm.getContent(), postForm.getPostHashTagContents());
 
         return "redirect:/post/list?msg=" + Util.url.encode(post.getId() + "번 게시물이 작성되었습니다.");
     }
@@ -57,10 +55,13 @@ public class PostController {
     public String postDetail(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id, Model model) {
         Post post = postService.findByPostId(id).get();
         Member member = memberContext.getMember();
+
         if (!postService.canAccess(member, post)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
         model.addAttribute("post", post);
+
         return "post/detail";
     }
 
@@ -69,10 +70,43 @@ public class PostController {
     public String delete(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id) {
         Post post = postService.findByPostId(id).get();
         Member member = memberContext.getMember();
-        if(!postService.canAccess(member, post)) {
+
+        if (!postService.canAccess(member, post)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
         postService.delete(post);
+
         return "redirect:/post/list?msg=" + Util.url.encode(post.getId() + "번 게시물이 삭제되었습니다.");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/modify")
+    public String showModify(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id, Model model) {
+        Post post = postService.findByPostId(id).get();
+        Member member = memberContext.getMember();
+
+        if (!postService.canAccess(member, post)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        model.addAttribute("post", post);
+
+        return "post/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/modify")
+    public String modify(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id, @Valid PostForm postForm) {
+        Post post = postService.findByPostId(id).get();
+        Member member = memberContext.getMember();
+
+        if (!postService.canAccess(member, post)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        postService.modify(post, postForm.getSubject(), postForm.getContent(), postForm.getPostHashTagContents());
+
+        return "redirect:/post/list?msg=" + Util.url.encode(post.getId() + "번 게시물이 수정되었습니다.");
     }
 }

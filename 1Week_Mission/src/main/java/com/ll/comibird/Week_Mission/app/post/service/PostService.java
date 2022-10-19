@@ -6,7 +6,6 @@ import com.ll.comibird.Week_Mission.app.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +15,12 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final PostHashTagService postHashTagService;
+
     public List<Post> findAllByOrderByIdDesc() {
         return postRepository.findAllByOrderByIdDesc();
     }
 
-    public Post write(Member member, String subject, String content, String hashTagContents) {
+    public Post write(Member member, String subject, String content, String postHashTagContents) {
         Post post = Post.builder()
                 .author(member)
                 .subject(subject)
@@ -29,7 +29,7 @@ public class PostService {
                 .updateDate(LocalDateTime.now())
                 .build();
         postRepository.save(post);
-        postHashTagService.applyHashTags(post, hashTagContents);
+        postHashTagService.applyHashTags(post, postHashTagContents);
         return post;
     }
 
@@ -44,5 +44,13 @@ public class PostService {
 
     public void delete(Post post) {
         postRepository.delete(post);
+    }
+
+    public void modify(Post post, String subject, String content, String postHashTagContents) {
+        post.setSubject(subject);
+        post.setContent(content);
+        postHashTagService.applyHashTags(post, postHashTagContents);
+
+        postRepository.save(post);
     }
 }
