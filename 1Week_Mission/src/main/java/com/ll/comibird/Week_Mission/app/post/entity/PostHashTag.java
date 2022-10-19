@@ -15,16 +15,10 @@ import javax.persistence.*;
 @SuperBuilder
 @ToString(callSuper = true)
 public class PostHashTag extends BaseEntity {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @ManyToOne
+    @ToString.Exclude
     private Post post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postKeywordId")
+    @ManyToOne
+    @ToString.Exclude
     private PostKeyword postKeyword;
 }

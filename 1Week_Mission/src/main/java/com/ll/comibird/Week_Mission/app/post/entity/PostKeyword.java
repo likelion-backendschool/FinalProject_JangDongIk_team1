@@ -16,10 +16,5 @@ import java.util.List;
 @SuperBuilder
 @ToString(callSuper = true)
 public class PostKeyword extends BaseEntity {
-    @Column(nullable = false)
     private String content;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "postKeyword", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostHashTag> postHashTagList = new ArrayList<>();
 }
