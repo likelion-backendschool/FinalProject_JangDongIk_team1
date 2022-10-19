@@ -78,4 +78,8 @@ public class MemberService {
          memberRepository.save(member);
          return member;
     }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 }
