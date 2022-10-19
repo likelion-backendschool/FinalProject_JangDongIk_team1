@@ -1,9 +1,0 @@
-spring:
-  mail:
-    host: smtp.mail.nate.com
-    port: 465
-    username: endorimu@nate.com
-    password: ehddlr0ehddlr
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
