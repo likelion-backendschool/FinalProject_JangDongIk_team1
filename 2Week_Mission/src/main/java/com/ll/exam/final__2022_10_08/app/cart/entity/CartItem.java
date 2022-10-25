@@ -23,4 +23,8 @@ public class CartItem extends BaseEntity {
     private Member member;
     @ManyToOne(fetch = LAZY)
     private Product product;
+
+    public String getJdenticon() {
+        return "cartItem__" + getId();
+    }
 }
