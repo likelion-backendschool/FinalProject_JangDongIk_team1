@@ -48,6 +48,7 @@ public class OrderService {
         Order order = Order
                 .builder()
                 .member(member)
+                .readyStatus(true)
                 .build();
 
         for (OrderItem orderItem : orderItems) {
@@ -100,5 +101,9 @@ public class OrderService {
 
     public List<Order> findAllByMemberId(Long id) {
         return orderRepository.findAllByMemberId(id);
+    }
+
+    public Order cancelOrder(long id) {
+        return orderRepository.deleteAllById(id);
     }
 }

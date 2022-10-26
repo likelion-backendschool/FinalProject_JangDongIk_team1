@@ -5,6 +5,7 @@ import com.ll.exam.final__2022_10_08.app.order.entiry.Order;
 import com.ll.exam.final__2022_10_08.app.order.exception.ActorCanNotSeeOrderException;
 import com.ll.exam.final__2022_10_08.app.order.service.OrderService;
 import com.ll.exam.final__2022_10_08.app.security.dto.MemberContext;
+import com.ll.exam.final__2022_10_08.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,6 +38,23 @@ public class OrderController {
         model.addAttribute("order", order);
 
         return "order/detail";
+    }
+
+    // 수정 필요
+    @PostMapping("/{id}/cancel")
+    @PreAuthorize("isAuthenticated()")
+    public String cancelOrder(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id) {
+        Order order = orderService.findForPrintById(id).get();
+
+        Member actor = memberContext.getMember();
+
+        if (orderService.actorCanSee(actor, order) == false) {
+            throw new ActorCanNotSeeOrderException();
+        }
+
+        orderService.cancelOrder(order.getId());
+
+        return "redirect:/order/list?msg=" + Ut.url.encode("취소 했습니다.");
     }
 
     @PostMapping("/create")

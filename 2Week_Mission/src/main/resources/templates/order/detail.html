@@ -38,6 +38,12 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <form method="POST" th:action="@{|/order/${order.id}/cancel|}" class="btn btn-sm">
+                        <i class="fa-solid fa-cart-arrow-down"></i>
+                        <button type="submit" class="ml-2">주문취소</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
