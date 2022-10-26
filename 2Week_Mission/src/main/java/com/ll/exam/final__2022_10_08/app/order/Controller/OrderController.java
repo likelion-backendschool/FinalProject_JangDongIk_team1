@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,5 +37,24 @@ public class OrderController {
         model.addAttribute("order", order);
 
         return "order/detail";
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("isAuthenticated()")
+    public String makeOrder(@AuthenticationPrincipal MemberContext memberContext) {
+        Member member = memberContext.getMember();
+        Order order = orderService.createFromCart(member);
+
+        return "redirect:/order/%d".formatted(order.getId());
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    public String showOrderList(@AuthenticationPrincipal MemberContext memberContext, Model model){
+        Member member = memberContext.getMember();
+        List<Order> orders = orderService.findAllByMemberId(member.getId());
+        model.addAttribute("orders", orders);
+
+        return "order/list";
     }
 }

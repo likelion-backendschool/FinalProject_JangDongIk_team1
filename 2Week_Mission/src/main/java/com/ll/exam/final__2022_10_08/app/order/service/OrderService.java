@@ -97,4 +97,8 @@ public class OrderService {
     public boolean actorCanSee(Member actor, Order order) {
         return actor.getId().equals(order.getMember().getId());
     }
+
+    public List<Order> findAllByMemberId(Long id) {
+        return orderRepository.findAllByMemberId(id);
+    }
 }
