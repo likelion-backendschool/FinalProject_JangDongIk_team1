@@ -27,6 +27,7 @@ public class CartController {
     private final CartService cartService;
     private final ProductService productService;
 
+    // 장바구니 리스트
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     public String showItems(@AuthenticationPrincipal MemberContext memberContext, Model model) {
@@ -39,6 +40,7 @@ public class CartController {
         return "cart/items";
     }
 
+    // 장바구니에 상품 추가
     // Post 요청으로 수정 필요
     @GetMapping("/add/{productId}")
     @PreAuthorize("isAuthenticated()")
@@ -50,6 +52,7 @@ public class CartController {
         return "redirect:/product/list?msg=" + Ut.url.encode("장바구니에 추가되었습니다.");
     }
 
+    // 장바구니의 상품 삭제
     @PostMapping("/remove")
     @PreAuthorize("isAuthenticated()")
     public String removeItems(@AuthenticationPrincipal MemberContext memberContext, String ids) {

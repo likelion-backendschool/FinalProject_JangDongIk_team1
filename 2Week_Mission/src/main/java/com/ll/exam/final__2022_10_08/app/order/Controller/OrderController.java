@@ -24,6 +24,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    // 주문 상세 페이지
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public String showDetail(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id, Model model) {
@@ -40,6 +41,7 @@ public class OrderController {
         return "order/detail";
     }
 
+    // 주문 취소
     // 수정 필요
     @PostMapping("/{id}/cancel")
     @PreAuthorize("isAuthenticated()")
@@ -57,6 +59,7 @@ public class OrderController {
         return "redirect:/order/list?msg=" + Ut.url.encode("취소 했습니다.");
     }
 
+    // 주문 생성
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String makeOrder(@AuthenticationPrincipal MemberContext memberContext) {
@@ -66,6 +69,7 @@ public class OrderController {
         return "redirect:/order/%d".formatted(order.getId());
     }
 
+    // 주문 리스트
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     public String showOrderList(@AuthenticationPrincipal MemberContext memberContext, Model model){
