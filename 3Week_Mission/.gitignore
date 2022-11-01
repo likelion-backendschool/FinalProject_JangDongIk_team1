@@ -37,3 +37,6 @@ out/
 .vscode/
 
 application-base-addi.yml
+application-dev.yml
+application-prod.yml
+application-test.yml
