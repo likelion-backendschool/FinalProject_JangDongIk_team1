@@ -88,7 +88,7 @@ public class AdmRebateController {
 
         String redirect = "redirect:/adm/rebate/rebateOrderItemList?yearMonth=" + yearMonth;
         redirect += "&msg=" + Ut.url.encode("%d건의 정산품목을 정산처리하였습니다.".formatted(idsArr.length));
-        
+
         return redirect;
     }
 }
