@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +50,9 @@ public class MyBookService {
             return null;
         }
         return myBooks;
+    }
+
+    public Optional<MyBook> findById(Long id) {
+        return myBookRepository.findById(id);
     }
 }
