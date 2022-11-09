@@ -1,7 +1,9 @@
 package com.ll.exam.mutBook.app.member.controller;
 
+import com.ll.exam.mutBook.app.base.dto.RsData;
 import com.ll.exam.mutBook.app.member.entity.Member;
 import com.ll.exam.mutBook.app.member.service.MemberService;
+import com.ll.exam.mutBook.util.Ut;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +23,7 @@ public class ApiV1MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<RsData> login(@RequestBody LoginDto loginDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authentication", "JWT키");
 
@@ -29,22 +31,22 @@ public class ApiV1MemberController {
 
         // 로그인 정보 유효성 검사
         if (loginDto.isNotValid()) {
-            return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
+            return Ut.spring.responseEntityOf(RsData.of("F-1", "로그인 정보가 올바르지 않습니다."));
         }
 
         // 회원 정보 유효성 검사
         if (member == null) {
-            return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
+            return Ut.spring.responseEntityOf(RsData.of("F-2", "일치하는 회원이 존재하지 않습니다."));
         }
 
         // 비밀번호 유효성 검사
         if (passwordEncoder.matches(loginDto.getPassword(), member.getPassword()) == false) {
-            return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
+            return Ut.spring.responseEntityOf(RsData.of("F-3", "비밀번호가 일치하지 않습니다."));
         }
 
-        String body = "username : %s, password : %s".formatted(loginDto.getUsername(), loginDto.getPassword());
+        headers.set("Authentication", "JWT_Access_Token");
 
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+        return Ut.spring.responseEntityOf(RsData.of("S-1", "로그인 성공, Access Token을 발급합니다."), headers);
     }
 
     @Data

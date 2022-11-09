@@ -127,6 +127,10 @@ public class Ut {
             return new ResponseEntity<>(rsData, headers, rsData.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
         }
 
+        public static <T> ResponseEntity<T> responseEntityOf(HttpHeaders headers) {
+            return new ResponseEntity<>(null, headers, HttpStatus.OK);
+        }
+
         public static HttpHeaders httpHeadersOf(String... args) {
             HttpHeaders headers = new HttpHeaders();
 
