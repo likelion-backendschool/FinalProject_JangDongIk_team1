@@ -11,6 +11,7 @@ import com.ll.exam.mutBook.app.member.entity.emum.AuthLevel;
 import com.ll.exam.mutBook.app.member.exception.AlreadyJoinException;
 import com.ll.exam.mutBook.app.member.repository.MemberRepository;
 import com.ll.exam.mutBook.app.security.dto.MemberContext;
+import com.ll.exam.mutBook.app.security.jwt.JwtProvider;
 import com.ll.exam.mutBook.util.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class MemberService {
     private final EmailVerificationService emailVerificationService;
     private final EmailService emailService;
     private final CashService cashService;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public Member join(String username, String password, String email, String nickname) {
@@ -205,5 +207,9 @@ public class MemberService {
 
     public boolean verifyWithWhiteList(Member member, String token) {
         return member.getAccessToken().equals(token);
+    }
+
+    public String genAccessToken(Member member) {
+        return jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60 * 60 * 24 * 90);
     }
 }

@@ -6,6 +6,7 @@ import com.ll.exam.mutBook.app.member.service.MemberService;
 import com.ll.exam.mutBook.util.Ut;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/member")
 @RequiredArgsConstructor
+@Slf4j
 public class ApiV1MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<RsData> login(@RequestBody LoginDto loginDto) {
-        headers.set("Authentication", "JWT키");
-
         Member member = memberService.findByUsername(loginDto.getUsername()).orElse(null);
 
         // 로그인 정보 유효성 검사
@@ -43,9 +43,19 @@ public class ApiV1MemberController {
             return Ut.spring.responseEntityOf(RsData.of("F-3", "비밀번호가 일치하지 않습니다."));
         }
 
+        log.debug("Util.json.toStr(member.getAccessTokenClaims()) : " + Ut.json.toStr(member.getAccessTokenClaims()));
+
+        String accessToken = memberService.genAccessToken(member);
+
         return Ut.spring.responseEntityOf(
-                RsData.of("S-1", "로그인 성공, Access Token을 발급합니다."),
-                Ut.spring.httpHeadersOf("Authentication", "JWT_Access_Token")
+                RsData.of(
+                        "S-1",
+                        "로그인 성공, Access Token을 발급합니다.",
+                        Ut.mapOf(
+                                "accessToken", accessToken
+                        )
+                ),
+                Ut.spring.httpHeadersOf("Authentication", accessToken)
         );
     }
 
