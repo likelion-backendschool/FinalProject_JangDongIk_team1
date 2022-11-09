@@ -24,7 +24,6 @@ public class ApiV1MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<RsData> login(@RequestBody LoginDto loginDto) {
-        HttpHeaders headers = new HttpHeaders();
         headers.set("Authentication", "JWT키");
 
         Member member = memberService.findByUsername(loginDto.getUsername()).orElse(null);
@@ -44,9 +43,10 @@ public class ApiV1MemberController {
             return Ut.spring.responseEntityOf(RsData.of("F-3", "비밀번호가 일치하지 않습니다."));
         }
 
-        headers.set("Authentication", "JWT_Access_Token");
-
-        return Ut.spring.responseEntityOf(RsData.of("S-1", "로그인 성공, Access Token을 발급합니다."), headers);
+        return Ut.spring.responseEntityOf(
+                RsData.of("S-1", "로그인 성공, Access Token을 발급합니다."),
+                Ut.spring.httpHeadersOf("Authentication", "JWT_Access_Token")
+        );
     }
 
     @Data
