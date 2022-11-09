@@ -4,6 +4,10 @@ package com.ll.exam.mutBook.app.member.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.exam.mutBook.app.base.entity.BaseEntity;
 import com.ll.exam.mutBook.app.member.entity.emum.AuthLevel;
+<<<<<<< HEAD
+=======
+import com.ll.exam.mutBook.util.Ut;
+>>>>>>> 8b7f26677492c3cf19e70880a13d932ce9e5cff1
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,8 +17,16 @@ import org.springframework.util.StringUtils;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
+=======
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+>>>>>>> 8b7f26677492c3cf19e70880a13d932ce9e5cff1
 
 @Entity
 @Setter
@@ -32,6 +44,11 @@ public class Member extends BaseEntity {
     private boolean emailVerified;
     private long restCash;
     private String nickname;
+<<<<<<< HEAD
+=======
+    @Column(columnDefinition = "TEXT")
+    private String accessToken;
+>>>>>>> 8b7f26677492c3cf19e70880a13d932ce9e5cff1
 
     @Convert(converter = AuthLevel.Converter.class)
     private AuthLevel authLevel;
@@ -48,6 +65,48 @@ public class Member extends BaseEntity {
         super(id);
     }
 
+<<<<<<< HEAD
+=======
+    public static Member fromMap(Map<String, Object> map) {
+        return fromJwtClaims(map);
+    }
+
+    public static Member fromJwtClaims(Map<String, Object> jwtClaims) {
+        long id = 0;
+
+        if (jwtClaims.get("id") instanceof Long) {
+            id = (long) jwtClaims.get("id");
+        } else if (jwtClaims.get("id") instanceof Integer) {
+            id = (long) (int) jwtClaims.get("id");
+        }
+
+        LocalDateTime createDate = null;
+        LocalDateTime modifyDate = null;
+
+        if (jwtClaims.get("createDate") instanceof List) {
+            createDate = Ut.date.bitsToLocalDateTime((List<Integer>) jwtClaims.get("createDate"));
+        }
+
+        if (jwtClaims.get("modifyDate") instanceof List) {
+            modifyDate = Ut.date.bitsToLocalDateTime((List<Integer>) jwtClaims.get("modifyDate"));
+        }
+
+        String username = (String) jwtClaims.get("username");
+        String email = (String) jwtClaims.get("email");
+        String accessToken = (String) jwtClaims.get("accessToken");
+
+        return Member
+                .builder()
+                .id(id)
+                .createDate(createDate)
+                .modifyDate(modifyDate)
+                .username(username)
+                .email(email)
+                .accessToken(accessToken)
+                .build();
+    }
+
+>>>>>>> 8b7f26677492c3cf19e70880a13d932ce9e5cff1
     public String getJdenticon() {
         return "member__" + getId();
     }
@@ -67,4 +126,38 @@ public class Member extends BaseEntity {
 
         return authorities;
     }
+<<<<<<< HEAD
+=======
+
+    // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+
+        return authorities;
+    }
+
+    public Map<String, Object> getAccessTokenClaims() {
+        return Ut.mapOf(
+                "id", getId(),
+                "createDate", getCreateDate(),
+                "modifyDate", getModifyDate(),
+                "username", getUsername(),
+                "email", getEmail(),
+                "authorities", getAuthorities()
+        );
+    }
+
+    public Map<String, Object> toMap() {
+        return Ut.mapOf(
+                "id", getId(),
+                "createDate", getCreateDate(),
+                "modifyDate", getModifyDate(),
+                "username", getUsername(),
+                "email", getEmail(),
+                "accessToken", getAccessToken(),
+                "authorities", getAuthorities()
+        );
+    }
+>>>>>>> 8b7f26677492c3cf19e70880a13d932ce9e5cff1
 }
