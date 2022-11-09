@@ -20,6 +20,18 @@ public class MemberContext extends User {
     private final String nickname;
     private final AuthLevel authLevel;
 
+    public MemberContext(Member member) {
+        super(member.getUsername(), "", member.getAuthorities());
+
+        this.id = member.getId();
+        this.createDate = member.getCreateDate();
+        this.modifyDate = member.getModifyDate();
+        this.username = member.getUsername();
+        this.email = member.getEmail();
+        this.nickname = member.getNickname();
+        this.authLevel = member.getAuthLevel();
+    }
+
     public MemberContext(Member member, List<GrantedAuthority> authorities) {
         super(member.getUsername(), member.getPassword(), authorities);
         this.id = member.getId();

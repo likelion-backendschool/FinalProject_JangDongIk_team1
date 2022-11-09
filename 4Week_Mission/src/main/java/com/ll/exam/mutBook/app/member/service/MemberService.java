@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -176,6 +178,20 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    @Cacheable("member")
+    public Map<String, Object> getMemberMapByUsername__cached(String username) {
+        Member member = findByUsername(username).orElse(null);
+
+        return member.toMap();
+    }
+
+    public Member getByUsername__cached(String username) {
+        MemberService thisObj = (MemberService)AppConfig.getContext().getBean("memberService");
+        Map<String, Object> memberMap = thisObj.getMemberMapByUsername__cached(username);
+
+        return Member.fromMap(memberMap);
+    }
+
     @Data
     @AllArgsConstructor
     public static class AddCashRsDataBody {
@@ -185,5 +201,9 @@ public class MemberService {
 
     public long getRestCash(Member member) {
         return memberRepository.findById(member.getId()).get().getRestCash();
+    }
+
+    public boolean verifyWithWhiteList(Member member, String token) {
+        return member.getAccessToken().equals(token);
     }
 }
