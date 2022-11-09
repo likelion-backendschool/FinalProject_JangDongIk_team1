@@ -1,5 +1,6 @@
 package com.ll.exam.mutBook.app.security.dto;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.ll.exam.mutBook.app.member.entity.Member;
 import com.ll.exam.mutBook.app.member.entity.emum.AuthLevel;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.List;
 
 
 @Getter
+@JsonIncludeProperties({"id", "createDate", "modifyDate", "username", "email", "nickname", "authorities"})
 public class MemberContext extends User {
     private final Long id;
     private final LocalDateTime createDate;
@@ -22,7 +24,6 @@ public class MemberContext extends User {
 
     public MemberContext(Member member) {
         super(member.getUsername(), "", member.getAuthorities());
-
         this.id = member.getId();
         this.createDate = member.getCreateDate();
         this.modifyDate = member.getModifyDate();

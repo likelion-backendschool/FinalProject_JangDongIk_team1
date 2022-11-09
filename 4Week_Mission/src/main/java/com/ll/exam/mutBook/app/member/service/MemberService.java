@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -209,7 +210,15 @@ public class MemberService {
         return member.getAccessToken().equals(token);
     }
 
+    @Transactional
     public String genAccessToken(Member member) {
-        return jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60 * 60 * 24 * 90);
+        String accessToken = member.getAccessToken();
+
+        if (StringUtils.hasLength(accessToken) == false) {
+            accessToken = jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
+            member.setAccessToken(accessToken);
+        }
+
+        return accessToken;
     }
 }

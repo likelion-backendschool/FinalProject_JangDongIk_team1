@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -156,5 +158,55 @@ class AuthTests {
         // Then
         resultActions
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인 후 얻은 JWT 토큰으로 현재 로그인 한 회원의 정보를 얻을 수 있다.")
+    void t5() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/member/login")
+                                .content("""
+                                        {
+                                            "username": "user1",
+                                            "password": "1234"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+
+        MvcResult mvcResult = resultActions.andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        String accessToken = response.getHeader("Authentication");
+
+        resultActions = mvc
+                .perform(
+                        get("/api/v1/member/me")
+                                .header("Authorization", "Bearer " + accessToken)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").value("성공"))
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.createDate").isNotEmpty())
+                .andExpect(jsonPath("$.data.modifyDate").isNotEmpty())
+                .andExpect(jsonPath("$.data.username").value("user1"))
+                .andExpect(jsonPath("$.data.email").value("user1@test.com"))
+                .andExpect(jsonPath("$.data.nickname").isEmpty())
+                .andExpect(jsonPath("$.data.authorities").isNotEmpty())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.fail").value(false));
     }
 }
