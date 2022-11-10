@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,5 +38,21 @@ public class MyBookService {
                 .forEach(orderItem -> myBookRepository.deleteByProductIdAndOwnerId(orderItem.getProduct().getId(), order.getBuyer().getId()));
 
         return RsData.of("S-1", "나의 책장에서 제거되었습니다.");
+    }
+
+    public List<MyBook> findAll(Long id) {
+        return myBookRepository.findAllByOwnerId(id);
+    }
+
+    public List<MyBook> findAllByOwnerId(Long id) {
+        List<MyBook> myBooks = myBookRepository.findAllByOwnerId(id);
+        if(myBooks==null){
+            return null;
+        }
+        return myBooks;
+    }
+
+    public Optional<MyBook> findById(Long id) {
+        return myBookRepository.findById(id);
     }
 }
